@@ -11,6 +11,15 @@
 
 namespace WebCoder
 {
+    namespace Graphics
+    {
+        
+    }
+
+
+
+
+
 class CanvasManager
 {
 private:

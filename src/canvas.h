@@ -1,5 +1,5 @@
-#ifndef WEBCODER_CANVAS_H
-#define WEBCODER_CANVAS_H
+#ifndef WEBCODER_GRAPHICS_CANVAS_H
+#define WEBCODER_GRAPHICS_CANVAS_H
 
 #include <iostream>
 #include <emscripten.h>
@@ -13,14 +13,16 @@
 
 namespace WebCoder
 {
+namespace Graphics
+{
 
 class Canvas
 {
 private:
-    const emscripten::val canvas_;
-    const EmscriptenWebGLContextAttributes attr_;
-    const EMSCRIPTEN_WEBGL_CONTEXT_HANDLE context_;
-    std::array<float, 4> color_;
+    static std::vector<std::shared_ptr<emscripten::val>> canvasPtrs_;
+    static EmscriptenWebGLContextAttributes attr_;
+    static EMSCRIPTEN_WEBGL_CONTEXT_HANDLE context_;
+    const std::shared_ptr<emscripten::val> canvasPtr_;
 
     static auto getContextAttribute() -> EmscriptenWebGLContextAttributes
     {
@@ -41,12 +43,10 @@ private:
     };
 
 public:
-    Canvas(const std::string id) : 
-        canvas_(emscripten::val::global("document").call<emscripten::val>("getElementById",id)),
-        attr_(Canvas::getContextAttribute()),
-        context_(emscripten_webgl_create_context(id.c_str(), &attr_))
-        
-    {};
+    Canvas(const std::string id) : canvas_(emscripten::val::global("document").call<emscripten::val>("getElementById", id)),
+                                   attr_(Canvas::getContextAttribute()),
+                                   context_(emscripten_webgl_create_context(id.c_str(), &attr_))
+                                       {};
 
     auto getId() -> std::string
     {
@@ -71,6 +71,6 @@ public:
         return this->color_;
     };
 };
-
-} // namespace MATLAB
+} // namespace Graphics
+} // namespace WebCoder
 #endif
