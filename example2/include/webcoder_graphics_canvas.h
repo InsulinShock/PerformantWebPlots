@@ -12,6 +12,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <tuple>
 
 namespace WebCoder
 {
@@ -21,29 +22,20 @@ namespace Graphics
 class Canvas
 {
 private:
-    const std::string cssID_;
+    // const std::string cssID_;
     const emscripten::val canvas_;
 public:
-    Canvas(const std::string &id) : cssID_(id)
-    {
+    Canvas(const std::string &id);
 
-    };
+    auto getCssId() const -> std::string;
 
-    auto getCssId() const -> std::string
-    {
-        return this->cssID_;
-    };
 
-    auto copyOffscreenCanvas() -> void 
-    {
+    auto copyOffscreenCanvas(
+        const emscripten::val offScreenCanvas, 
+        const std::tuple<unsigned int, unsigned int, unsigned int, unsigned int>& offScreenRect) -> void;
+        
 
-    };
-
-    auto getDimensions() -> std::array<unsigned int,4>
-    {
-        const auto 
-    };
-
+    auto getDimensions() -> std::tuple<unsigned int, unsigned int>;
 };
 
 } // namespace Graphics

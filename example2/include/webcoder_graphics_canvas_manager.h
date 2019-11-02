@@ -50,19 +50,43 @@ public:
 
     auto getCanvasPtr(const std::string &cssId) -> std::shared_ptr<WebCoder::Graphics::Canvas>
     {
+        
+
         auto cssIdsMatch = [=](const std::shared_ptr<WebCoder::Graphics::Canvas> canvasPtr) {
-            return canvasPtr->getCssId().compare(cssId);
+            return canvasPtr->getCssId().compare(cssId) == 0;
         };
+
         auto canvasIter = std::find_if(canvases_.begin(), canvases_.end(), cssIdsMatch);
 
-        if (canvasIter != canvases_.end())
-            return *canvasIter;
-
+        if (canvasIter != canvases_.end()) return *canvasIter;
+        
         auto canvasPtr = std::make_shared<WebCoder::Graphics::Canvas>(cssId);
 
         canvases_.push_back(canvasPtr);
+        std::cout << canvases_.size() << "\n";
 
+        std::cout << cssId << "\n";
         return canvasPtr;
+    };
+
+    auto render(void) -> void 
+    {
+        emscripten_webgl_make_context_current(context_);   
+        glClearColor(0.5f, 0.7f, 0.1f, 1.0f);
+        glClearStencil(0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glFinish();
+
+        auto offScreenCanvas = emscripten::val::global("document").call<emscripten::val>("querySelector", emscripten::val("#offScreenCanvas"));
+        
+        int count = 0;
+        // std::cout << canvases_.size() << "\n";
+        for(auto canvasPtr : canvases_) {
+            canvasPtr->copyOffscreenCanvas(offScreenCanvas,{0,0,400,300});
+            // std::cout << count << "\n";
+            count++;
+        };           
+        
     };
 };
 } // namespace Graphics
