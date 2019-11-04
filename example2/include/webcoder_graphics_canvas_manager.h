@@ -49,8 +49,7 @@ public:
     };
 
     auto getCanvasPtr(const std::string &cssId) -> std::shared_ptr<WebCoder::Graphics::Canvas>
-    {
-        
+    {       
 
         auto cssIdsMatch = [=](const std::shared_ptr<WebCoder::Graphics::Canvas> canvasPtr) {
             return canvasPtr->getCssId().compare(cssId) == 0;
@@ -78,13 +77,9 @@ public:
         glFinish();
 
         auto offScreenCanvas = emscripten::val::global("document").call<emscripten::val>("querySelector", emscripten::val("#offScreenCanvas"));
-        
-        int count = 0;
-        // std::cout << canvases_.size() << "\n";
+                
         for(auto canvasPtr : canvases_) {
-            canvasPtr->copyOffscreenCanvas(offScreenCanvas,{0,0,400,300});
-            // std::cout << count << "\n";
-            count++;
+            canvasPtr->copyOffscreenCanvas(offScreenCanvas,{0,0,400,300});            
         };           
         
     };
